@@ -1,66 +1,99 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useState } from 'react';
+import OscilloscopeDisplay from '../components/OscilloscopeDisplay';
+import Controls from '../components/Controls';
 
 export default function Home() {
+  const [isRunning, setIsRunning] = useState(true);
+  const [frequency, setFrequency] = useState(5);
+  const [amplitude, setAmplitude] = useState(2.5); // 0-2.5 around a 2.5V offset
+  const [waveType, setWaveType] = useState('uart');
+  const [message, setMessage] = useState('HELLO');
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main style={mainStyle}>
+      <div style={headerStyle}>
+        <h1 style={titleStyle}>DIGITAL OSCILLOSCOPE</h1>
+        <p style={subtitleStyle}>COE 381 PROJECT</p>
+      </div>
+
+      <div style={contentStyle}>
+        <div style={displayWrapper}>
+          <OscilloscopeDisplay 
+            isRunning={isRunning} 
+            frequency={frequency} 
+            amplitude={amplitude} 
+            waveType={waveType}
+            message={message} 
+          />
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        
+        <div style={controlsWrapper}>
+          <Controls 
+            isRunning={isRunning} setIsRunning={setIsRunning}
+            frequency={frequency} setFrequency={setFrequency}
+            amplitude={amplitude} setAmplitude={setAmplitude}
+            waveType={waveType} setWaveType={setWaveType}
+            message={message} setMessage={setMessage}
+          />
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
+
+const mainStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100vh',
+  padding: '2rem',
+  alignItems: 'center',
+  background: '#000000',
+  fontFamily: 'monospace',
+};
+
+const headerStyle = {
+  textAlign: 'center',
+  marginBottom: '2rem',
+  borderBottom: '2px solid #ffffff',
+  paddingBottom: '1rem',
+  width: '100%',
+  maxWidth: '1200px',
+};
+
+const titleStyle = {
+  fontSize: '2.5rem',
+  fontWeight: 'bold',
+  letterSpacing: '2px',
+  color: '#ffffff',
+  margin: '0 0 0.5rem 0',
+  textTransform: 'uppercase',
+};
+
+const subtitleStyle = {
+  color: '#ffffff',
+  fontSize: '1.2rem',
+  letterSpacing: '1px',
+  textTransform: 'uppercase',
+};
+
+const contentStyle = {
+  display: 'flex',
+  flexDirection: 'row',
+  flexWrap: 'wrap',
+  gap: '2rem',
+  justifyContent: 'center',
+  alignItems: 'flex-start',
+  width: '100%',
+  maxWidth: '1200px',
+};
+
+const displayWrapper = {
+  flex: '1 1 600px',
+  display: 'flex',
+  justifyContent: 'center',
+};
+
+const controlsWrapper = {
+  flex: '0 1 350px',
+};
