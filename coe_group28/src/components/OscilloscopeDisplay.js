@@ -10,7 +10,7 @@ import { OscilloscopeSimulator } from '../lib/simulator';
  */
 export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, waveType, message }) {
   const canvasRef = useRef(null);
-  
+
   // dataRef stores the history of our ADC readings to draw across the X-axis
   const dataRef = useRef([]);
   const simulatorRef = useRef(null);
@@ -41,9 +41,9 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
         // Simulates receiving raw strings over a hardware serial port (e.g. from an Arduino UART)
         serialBufferRef.current += chunk;
         const lines = serialBufferRef.current.split('\n');
-        
+
         // The last line might be partially downloaded, keep it in the buffer until a newline arrives
-        serialBufferRef.current = lines.pop(); 
+        serialBufferRef.current = lines.pop();
 
         for (const line of lines) {
           const val = line.trim();
@@ -52,7 +52,7 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
             const channelValues = val.split(',').map(v => parseInt(v, 10));
             // Push values directly into array for drawing
             dataRef.current.push(channelValues);
-            
+
             // Limit buffer to 4000 items to prevent running out of system memory
             if (dataRef.current.length > 4000) {
               dataRef.current.shift();
@@ -70,25 +70,25 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
       // Calculate how many milliseconds have actually passed since the last draw frame
       if (simulatorRef.current && simulatorRef.current.isRunning) {
         const deltaMs = time - lastTime;
-        
+
         // Using our sampleRate (2000), calculate exactly how many samples need to be computed
         // to catch up to the real-world passage of elapsed time on the monitor. 
         // Example: 16ms of time passed = require ~32 new points simulated.
         const samples = Math.floor(deltaMs * (simulatorRef.current.sampleRate / 1000));
         if (samples > 0) {
           simulatorRef.current.advance(samples); // Push the physics engine forward
-          lastTime = time; 
+          lastTime = time;
         }
       } else {
         lastTime = time;
       }
 
       drawCanvas(); // Paint all points onto HTML5 Canvas
-      
+
       // Request next frame from browser at 60 FPS
       renderFrameRef.current = requestAnimationFrame(render);
     };
-    
+
     // Kickstart the engine
     lastTime = performance.now();
     renderFrameRef.current = requestAnimationFrame(render);
@@ -145,7 +145,7 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
     // Draw lines separately for each active channel
     for (let c = 0; c < numChannels; c++) {
       ctx.beginPath();
-      
+
       // Styling logic: Give channels different stroke styles so they can be identified
       if (c === 0) { ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2; }
       else if (c === 1) { ctx.strokeStyle = '#cccccc'; ctx.lineWidth = 2; ctx.setLineDash([4, 2]); }
@@ -154,19 +154,19 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
       // Layout logic: Stack multi-channel traces vertically (like a Logic Analyzer)
       const drawableHeight = (height - margin * 2) / numChannels;
       const channelOffsetY = margin + (c * drawableHeight);
-      const traceHeight = drawableHeight * 0.8; 
+      const traceHeight = drawableHeight * 0.8;
       const traceOffsetTop = channelOffsetY + (drawableHeight * 0.1);
 
       // Connect the dots!
       for (let i = 0; i < visibleData.length; i++) {
         const adcValue = visibleData[i][c];
-        
+
         // Reverse-evaluate the 10-bit integer (1023 max) back to a normalized ratio (0.0 to 1.0)
-        const normalizedY = adcValue / 1023; 
-        
+        const normalizedY = adcValue / 1023;
+
         // Map data sequence index to X-pixel coordinates 
         const x = (i / displayWindowSamples) * width;
-        
+
         // Map hardware ratio to Y-pixel coordinates, inverted because Y=0 is canvas top
         const y = traceOffsetTop + traceHeight - (normalizedY * traceHeight);
 
@@ -185,11 +185,11 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
   };
 
   const drawGrid = (ctx, width, height) => {
-    ctx.strokeStyle = '#333333'; 
+    ctx.strokeStyle = '#333333';
     ctx.lineWidth = 1;
     ctx.setLineDash([2, 4]); // Creates dotted line
     ctx.beginPath();
-    
+
     // Draw horizontal voltage divisions
     for (let i = 0; i <= 10; i++) {
       const y = (i / 10) * height;
@@ -203,11 +203,11 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
       ctx.moveTo(x, 0);
       ctx.lineTo(x, height);
     }
-    
+
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.strokeStyle = '#555555';
-    
+
     // Solid bold center crosshairs
     ctx.beginPath();
     ctx.moveTo(0, height / 2);
@@ -226,16 +226,16 @@ export default function OscilloscopeDisplay({ isRunning, frequency, amplitude, w
       if (val < minAdc) minAdc = val;
       if (val > maxAdc) maxAdc = val;
     }
-    
+
     // Map back relative 0-1023 ADC bounds to absolute 0-5.0 limits
     const maxV = (maxAdc / 1023) * 5;
     const minV = (minAdc / 1023) * 5;
     const vpp = (maxV - minV).toFixed(2);
-    
-    setMetrics({ 
-      vpp, 
+
+    setMetrics({
+      vpp,
       freq: frequency.toFixed(1),
-      channels: numChannels 
+      channels: numChannels
     });
   };
 
