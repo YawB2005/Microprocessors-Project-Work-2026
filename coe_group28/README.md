@@ -7,7 +7,7 @@ This repository contains the software simulation for a custom Digital Oscillosco
 ### Problem Statement
 The main aim of our project was to build a physical, custom digital oscilloscope using an Arduino kit. The hardware was intended to sense signal waveforms using a sensor, read them, and pass that data through a serial connection to be displayed on a PC. 
 
-However, since we did not have access to the physical Arduino kit and sensors, we created this project as a complete software simulation of that setup. Our goal here was to model exactly how the Arduino works with various signals—from reading artificial sensor inputs to converting and sending them to the screen—all within a web browser without needing any physical parts.
+However, since we did not have access to the physical Arduino kit and sensors, we created this project as a complete software simulation of that setup. Our goal here was to model exactly how the Arduino works with various signals from reading artificial sensor inputs to converting and sending them to the screen—all within a web browser without needing any physical parts.
 
 ### Methodologies
 We built this simulation using a web framework called Next.js and used web graphics (HTML5 Canvas) to draw the signal waves smoothly. To mimic the Arduino hardware setup, we tackled the following features:
