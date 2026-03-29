@@ -1,22 +1,22 @@
-# Custom Oscilloscope: Web-Based Digital Oscilloscope & Protocol Simulator
+# Custom Oscilloscope Simulation
 
-This repository contains the source code for a web-based Digital Oscilloscope developed for COE 381. The project gives users a simple way to generate continuous waves (like sine or square waves) and see how computers send text messages to each other using standard communication methods (UART, I2C, SPI).
+This repository contains the software simulation for a custom Digital Oscilloscope project developed for COE 381. The simulation gives users a simple way to generate continuous waves (like sine or square waves) and see how computers send text messages to each other using standard communication methods (UART, I2C, SPI).
 
 ## Documentation 
 
 ### Problem Statement
-Learning about how computers talk to each other (using methods like UART, I2C, and SPI) can be hard to visualize. Normally, you would need expensive equipment like a real digital oscilloscope or a logic analyzer to see these signals in action. 
+The main aim of our project was to build a physical, custom digital oscilloscope using an Arduino kit. The hardware was intended to sense signal waveforms using a sensor, read them, and pass that data through a serial connection to be displayed on a PC. 
 
-Students and developers needed an easy, free way to see how simple text messages are turned into electrical signals (high and low voltages) over time. We wanted to create a tool right in the web browser that behaves and looks just like a real piece of hardware testing equipment.
+However, since we did not have access to the physical Arduino kit and sensors, we created this project as a complete software simulation of that setup. Our goal here was to model exactly how the Arduino works with various signals—from reading artificial sensor inputs to converting and sending them to the screen—all within a web browser without needing any physical parts.
 
 ### Methodologies
-We built this project using a web framework called Next.js and used web graphics (HTML5 Canvas) to draw the signal waves smoothly. Here is how we tackled the main features:
+We built this simulation using a web framework called Next.js and used web graphics (HTML5 Canvas) to draw the signal waves smoothly. To mimic the Arduino hardware setup, we tackled the following features:
 
 1. **Virtual Microcontroller Engine**
-   We created a "virtual brain" in the code that calculates what a signal should look like 2,000 times a second. This makes sure the waves and signals move smoothly across the screen just like real life.
+   We created a "virtual Arduino brain" in the code that calculates what a sensor's signal should look like 2,000 times a second. This makes sure the waves and signals move smoothly across the screen just like real life.
 
-2. **Simulating Real Hardware**
-   In the real world, a component called an Analog-to-Digital Converter (ADC) reads voltages (like 0 to 5 Volts) and turns them into numbers a computer can read (from 0 to 1023). We recreated this exact process in our code so that the simulator outputs data just like a real Arduino or similar circuit board.
+2. **Simulating Real Hardware (ADC)**
+   In the real world, the Arduino uses a component called an Analog-to-Digital Converter (ADC) to read sensor voltages (like 0 to 5 Volts) and turns them into numbers a computer can display (from 0 to 1023). We recreated this exact process in our code so that the simulator acts and outputs data identically to the physical Arduino we originally planned to use.
 
    ```javascript
    // Example showing how we translate an exact voltage into a computer-friendly number
@@ -38,9 +38,9 @@ We built this project using a web framework called Next.js and used web graphics
    To keep the animation looking great without slowing down the user's computer, we only draw the most recent part of the wave using optimized shapes, keeping the frame rate at a steady 60 frames per second.
 
 ### Findings
+*   **Successful Simulation:** We successfully proved that we could build a fully working model of the custom oscilloscope in software, replicating everything from its voltage limits to how it streams data from a "sensor."
 *   **Great Performance:** By using simple math instructions to draw the lines, the web browser was able to easily handle drawing thousands of data points every second without lagging.
 *   **Clear Visuals:** Stacking the different signals on top of each other made it incredibly easy to see how different communication lines work together (for example, seeing a clock line pulse exactly when a data line changes).
-*   **Realistic Data Flow:** Processing the simulator data the same way a real hardware sensor would (turning it into a string of numbers) made the code much simpler and easier to manage.
 
 Below is a simple example from our code showing how we prepare the lines to send data using the SPI protocol:
 
